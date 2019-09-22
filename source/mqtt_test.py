@@ -3,6 +3,7 @@ import paho.mqtt.client as mqtt
 import time
 import json
 import random
+import OPi.GPIO as GPIO
 
 topic = 'temperature/dht22'
 sleep_time = 0.1
