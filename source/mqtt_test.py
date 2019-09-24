@@ -6,7 +6,14 @@ import random
 import OPi.GPIO as GPIO
 from datetime import datetime
 
-topic = 'home-assistant/opiz/pir-1'
+t_root = 'fhass/'
+t_type = 'binary_sensor/'
+t_loc = 'workshop/'
+topic_config = t_root + t_type + t_loc + 'config' 
+topic_state = t_root + t_type + t_loc + 'state'
+payload_config = '{"name": "workshop", "device_class": "motion", "state_topic": "%s"}' % topic_state
+print(payload_config)
+
 on_sleep_time = 7
 off_sleep_time = 0.01
 
@@ -24,6 +31,9 @@ GPIO.setmode(GPIO.SUNXI)
 GPIO.setup('PA16', GPIO.IN, pull_up_down=GPIO.PUD_UP)
 last_state = 1
 sleep_time = off_sleep_time
+
+client.publish(topic_config, payload_config)
+
 while True:
     new_state = GPIO.input('PA16')
     if last_state != new_state:
@@ -36,7 +46,7 @@ while True:
         else:
             sleep_time = off_sleep_time
             payload = 'OFF'
-        client.publish(topic, payload)
+        client.publish(topic_state, payload)
         print('State published: ', payload)
     last_state = new_state
     time.sleep(sleep_time)
